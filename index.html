@@ -1,140 +1,65 @@
-<!DOCTYPE html>
 <html>
+
     <head>
-        <meta charset="utf-8">
-        <title>333_Camp_Website</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-        <link rel="stylesheet" href="main.css">
-        <link rel = "icon" href = "images/Logo_noback.png" type="image/png">
+
+        <title>統計地圖API基本範例</title>
+
+        <script language="javascript" type="text/javascript" src="http://segisapi.moi.gov.tw/StatAPI/statistics?appid=569D4B7A8EED5E14BF0ADA31A8C5372861D2C6320FC2A38DDA3DCCB488ED28E3CC8E9A5D9FF25B45F3C37EC28D9A9426EE1117905D76F04AE9B0A907FA6D39C1&apikey=0609505506443A6BB3ABF418D0E973CF0B238364032CAB197DC4593733E989F295E3053A0C3E7F76BD6EBC736319D06EE1068A1593EF686406EB51A0008E8AE30C9C56A731D3C6EF777F7910138DACB298648CBCEE1A7780F5279D020AA09B64703A019339AAD22B784059A16DF04B98DF96A363C62FE61970AE164EC18EA4DB30C3BC2895D8083784FCC292AEFCDD4F152084FA8959BF68AD54370C02539587C8E431160C9E2F21605C30B2F2382BBA3051C61F60821033353B703C9FBC8A71D5B79A6942E9DDEF1F919BD4D910E30B4751C56367A7A7DD741593ECB1B0E94CFEA3DE158D95B96BDC0F2BB68CFCE2635C4E63D74251BCC943544E0410D59FDC40E396CC5493752CF944D1FC017CE6ADE23FC38C88570D35DD07FEF6E19F637478680FE4CE09214DDD0C2E8739732D3325E8BFA8271B5666D3E0F73F8CC101A9A0A78DDC7943791FE1DA89A0E44CE2B890E10D3D649B9CF51EE754CFCAC781A41AF847EC312E178D1ED66D003871609EAF2F05772F47CDE44258C10392E2427C08255E13625BBD70ED7CADAF46BA31F46BEB910474526BE1A806D5918D3CBB33732B1B9F219030D3521126F79BB8A0A20B1C477C991F1A894E9B9B02FD5A1B40CB3DC6D8BDDD96AAF48E37EC060A3FF9000388EEA32F41260B238364032CAB19CFC2461888949A04428DDC08EB7A7BAD500B4B3D86C9BDBD224AD0BAEE40C0AFE988E38C2AB333F6FF09A9AB9A22BE42F3417E09FF57FCD36BD372F165B83650A1B5DE16E87F760EB135E1FDBC45DBEE14EED1C324198975C428B5F95E62694D76D205D1F35E65054C89C9DEB9AF87FDC083432158EB1281647DA3BE858AC05B732E4FB4729DC556F2FC45AC9DF08EE0"></script>
+
+        <script type="text/javascript">
+
+            var dataDB;
+
+            function init() {                                                                                  //初始化統計地圖物件
+
+                var dataSet = new Array();
+
+                var tmp = {tableName: "327FI_A5C1",fieldsId: ["H_CNT"]};　//呼叫社經資料庫資料
+
+                dataSet.push(tmp);
+
+                //設定統計資料之時序及空間範圍
+
+                var timeOpts = {timeSeries: true,time: ["102Y06M"]}
+
+                var dataOption = {dataType:DataType.ADMIN, timeOpts:timeOpts, dataLevel:DataLevel.COUNTY}
+
+                var areaSelect = {areaSelectType:AreaSelectType.DISTRICT, districtType:DistrictType.ALL};
+
+                dataDB = new DataDB(dataSet, dataOption, CoordSystem.EPSG3826, areaSelect); //設定資料物件
+
+                DrawStatMap(dataDB);                                                        //執行統計地圖(面量圖)繪製指令
+
+            }
+
+            function DrawStatMap(data) {                                                        //設定統計地圖(面量圖)繪製參數
+
+                var mColor = {maxColor: "#7c0505", minColor: "#ffb9b9", defaultColor: "#EEEEEE"};                    
+
+                var pChoropleth = {classifyMethod:ClassifyMethod.QUANTILE, classes:5, color:mColor, useInt: true};
+
+                var option = {pChoropleth:pChoropleth};
+
+                var containerObj = document.getElementById("MapView"),
+
+                var Map = new StatMap(containerObj, data,MapKind.CHOROPLETH, option);
+
+                       Map.drawMap(function (result){});                             //繪製統計地圖(面量圖)
+
+            }
+
+        </script>
+
     </head>
-    <body>
-        <header class = "header">
-            <div class = "container">
-                <nav class = "nav">
-                    <a href="index.html" class = "logo">
-                        <img src = "images/Logo_noback.png" alt="">
-                    </a>
-                    <div class = "hamburger-menu">
-                        <i class = "fas fa-bars"></i>
-                        <i class = "fas fa-times"></i>
-                    </div>
-                    <ul class = "nav-list">
-                        <li class = "nav-item">
-                            <a href = "index.html" class = "nav-link">Home</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a href = "#" class = "nav-link">About</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a href = "#" class = "nav-link">News</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a href = "#" class = "nav-link">Rooms</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a href = "#" class = "nav-link">Contact</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
 
-        <main>
-            <div class="hero">
-                <div class = "container">
-                    <div class = "main-heading">
-                        <h1 class = "title">333 Camping</h1>
-                        <!-- <h2 class = "subtitle"></h2> -->
-                    </div>
-                    <a href="#" class="btn btn-gradient">Explore now</a>
-                </div>
-            </div>
+    <body onload="init()">
 
-            <section class="booking">
-                <div class="container">
-                    <form action="" class="book-form">
-                        <div class="input-group">
-                            <label for="check-in" class="input-label">Check in</label>
-                            <input type="date" class="input" id="check-in">
-                        </div>
-                        <div class="input-group">
-                            <label for="check-out" class="input-label">Check out</label>
-                            <input type="date" class="input" id="check-out">
-                        </div>
-                        <div class="input-group">
-                            <label for="adults" class="input-label">Adults</label>
-                            <select class="options" id="adults">
-                                <option value="0">0</option>
-                                <option value="0">1</option>
-                                <option value="0">2</option>
-                                <option value="0">3</option>
-                                <option value="0">4</option>
-                                <option value="0">5</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="children" class="input-label">Children</label>
-                            <select class="options" id="children">
-                                <option value="0">0</option>
-                                <option value="0">1</option>
-                                <option value="0">2</option>
-                                <option value="0">3</option>
-                                <option value="0">4</option>
-                                <option value="0">5</option>
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-gradient">Book now</button>
-                    </form>
-                </div>
-            </section>
-            <section class="Envrionment">
-                <div class="container">
-                    <h5 class="section-head">
-                        <span class="heading">Explore</span>
-                        <span class="sub-heading">Our beautiful view</span>
-                    </h5>
-                    <div class = "night">
-                        <div class = "night-item light-view">
-                            <img src="images/night_1.jpg" alt = "" class = "night-image" width="450" height="400">
-                            <h3 class = "view-introduction">Nature Space</h3>
-                            <a href = "#" class = "btn btn-gradient">Book now</a>
-                        </div>
+        <font size="4" face="Microsoft JhengHei">102年6月-行政區縣市醫療院所家數統計</font><br/>
 
-                        <div class = "night-item light-view">
-                            <img src="images/night_2.jpg" alt = "" class = "night-image" width="450" height="400">
-                            <h3 class = "view-introduction">Beautiful Space</h3>                      </h3>
-                            <a href = "#" class = "btn btn-gradient">Book now</a>
-                        </div>
-                    </div>
-                    
-                </div>
-            </section>
+        <div id="MapView" style="width:600px;height:500px;"></div>         <!--建立統計地圖容器-->
 
-        </main>
+        <font size="4" face="Microsoft JhengHei">（資料來源：統計地圖API應用資料庫）</font><br/>
 
-        <footer class = "footer">
-            <div class = "container">
-                <div class = "footer-content">
-                    <div class = "footer-content-brand">
-                        <a href = "index.html" class = "logo">
-                            <img class = "footer-logo-image" src = "images/Logo.jpg" alt = "333_Camping" >
-                        </a>
-                        <div class = "information">
-                            <p>苗栗縣卓蘭鎮369號
-                                <br>Tel:0910-000-000
-                                <br>Email:333_Camping@gmail.com
-                            </p>
-                        </div>
-                    </div>
-                    <div class = "social-media">
-                        <a href="#" class = "small-link"><i class = "fab fa-facebook"></i></a>
-                        <a href="#" class = "small-link"><i class = "fab fa-instagram"></i></a>
-                        <a href="#" class = "small-link"><i class = "fab fa-line"></i></a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <script src="main.js"></script>
     </body>
+
 </html>
